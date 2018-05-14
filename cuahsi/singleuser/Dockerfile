@@ -26,12 +26,20 @@ ENV PATH="/opt/conda/envs/python2/bin:/home/jovyan/libs:/home/jovyan/libs/icomma
     IRODS_AUTHENTICATION_FILE="/home/jovyan/work/notebooks/data/.irods/.irodsA" 
 
 USER root
-
 ADD install-base.sh /home/install-base.sh
 RUN sh /home/install-base.sh
 
+ADD install-mpi.sh /home/install-mpi.sh
+RUN sh /home/install-mpi.sh
+
+ADD install-gnu.sh /home/install-gnu.sh
+RUN sh /home/install-gnu.sh
+
 ADD install-taudem.sh /home/install-taudem.sh
 RUN sh /home/install-taudem.sh
+
+ADD install-condaenvs.sh /home/install-condaenvs.sh
+RUN sh /home/install-condaenvs.sh
 
 ADD install-irods.sh /home/install-irods.sh
 RUN sh /home/install-irods.sh
@@ -39,20 +47,32 @@ RUN sh /home/install-irods.sh
 ADD install-rhessys.sh /home/install-rhessys.sh
 RUN sh /home/install-rhessys.sh
 
+ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH" \
+    CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/usr/include/python3.5m"
+
+ADD install-boost.sh /home/install-boost.sh
+RUN sh /home/install-boost.sh
+
 ADD install-dakota.sh /home/install-dakota.sh
 RUN sh /home/install-dakota.sh
 
 ADD install-dhsvm.sh /home/install-dhsvm.sh
 RUN sh /home/install-dhsvm.sh
 
-ADD install-python.sh /home/install-python.sh
-RUN sh /home/install-python.sh
+USER jovyan
+  ADD install-python.sh /home/install-python.sh
+  RUN sh /home/install-python.sh
 
-ADD install-r.sh /home/install-r.sh
-RUN sh /home/install-r.sh
+  ADD install-r.sh /home/install-r.sh
+  RUN sh /home/install-r.sh
+USER root
 
 ADD install-perm.sh /home/install-perm.sh
 RUN sh /home/install-perm.sh
 
+ADD install-cleanup.sh /home/install-cleanup.sh
+RUN sh /home/install-cleanup.sh
+
 USER jovyan
+
 CMD ["sh", "/srv/singleuser/singleuser.sh"]

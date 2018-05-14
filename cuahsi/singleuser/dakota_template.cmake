@@ -77,8 +77,10 @@ set( MPI_CXX_COMPILER "/usr/bin/mpicc"
 #    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 #ENDIF()
 
+
+#"/usr/include"
 set(BOOST_ROOT
-    "/usr/include"
+    "/usr/local/include"
     CACHE PATH "Use non-standard Boost install" FORCE)
 #set( Boost_NO_SYSTEM_PATHS TRUE
 #     CACHE BOOL "Supress search paths other than BOOST_ROOT" FORCE)

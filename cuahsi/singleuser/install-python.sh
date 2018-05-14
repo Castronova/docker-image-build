@@ -22,8 +22,10 @@ conda install -y -n root \
   graphviz 
 conda clean --all -y
 
-pip3 install --no-cache-dir hs_restclient wget 
-pip3 install --no-cache-dir git+https://github.com/cybergis/jupyterlib.git 
+/opt/conda/bin/pip install --no-cache-dir \
+   hs_restclient \
+   wget \
+   git+https://github.com/cybergis/jupyterlib.git 
 
 
 ###################################
@@ -57,7 +59,7 @@ pip3 install --no-cache-dir git+https://github.com/cybergis/jupyterlib.git
 
 # PYTHON 2
 conda install -y -n python2 \
-    pandas \
+    pandas=0.21.0 \
     gdal \
     basemap \
     ipykernel \
@@ -65,8 +67,8 @@ conda install -y -n python2 \
     celery \
     geopandas \
     graphviz \
-    statsmodels \
-    odm2api \
+    statsmodels=0.8.0 \
+    odm2api=0.6.0.a0 \
     landlab \
     bsddb
 conda clean --all -y
@@ -74,12 +76,10 @@ conda clean --all -y
 /opt/conda/envs/python2/bin/python \
  && pip install --no-cache-dir \
     hs_restclient \
-    wget \
-    sciunit2
+    wget==3.2 \
+    sciunit2 \
+    git+https://github.com/cybergis/jupyterlib.git 
 sciunit post-install 
-
-/opt/conda/envs/python2/bin/python \
- && pip install --no-cache-dir git+https://github.com/cybergis/jupyterlib.git 
 
 # register the kernels
 python -m ipykernel install \
@@ -91,7 +91,7 @@ python -m ipykernel install \
 #      INSTALL NBExtensions       #
 ###################################
 
-pip3 install --no-cache-dir git+https://github.com/Castronova/jupyter_contrib_nbextensions.git
+/opt/conda/bin/pip install --no-cache-dir git+https://github.com/Castronova/jupyter_contrib_nbextensions.git
 jupyter contrib nbextension install --user 
 jupyter nbextension enable recursivedelete/main --user --section=tree 
 jupyter nbextensions_configurator disable --user 
@@ -103,5 +103,4 @@ chown -R jovyan:users /home/jovyan/.jupyter
 ####################
 
 conda clean --all
-#if [ -d "/home/jovyan/.cache/" ]; then rm -rf /home/jovyan/.cache/; fi
 

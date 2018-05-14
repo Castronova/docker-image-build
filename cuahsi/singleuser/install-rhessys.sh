@@ -3,17 +3,14 @@ set -x
 set -e
 
 
-###################################
-#       INSTALL ECOHYDROLIB       #
-###################################
 
-pip2 install git+https://github.com/leonard-psu/EcohydroLib.git
+####################################################
+#       INSTALL ECOHYDROLIB/RHESSysWorkflows       #
+####################################################
 
-###################################
-#     INSTALL RHESSysWorkflows    #
-###################################
-
-pip2 install git+https://github.com/leonard-psu/RHESSysWorkflows.git
+/opt/conda/envs/python2/bin/pip install --no-cache-dir \
+  git+https://github.com/leonard-psu/EcohydroLib.git \
+  git+https://github.com/leonard-psu/RHESSysWorkflows.git
 
 # load the rhessys configuration file and modify for the current user
 sed -i -e 's|^ETC.*|ETC = /home/jovyan/libs/RHESSysWorkflows/etc|g' /home/jovyan/.ecohydro.cfg 
