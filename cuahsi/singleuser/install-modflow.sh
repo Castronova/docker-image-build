@@ -12,7 +12,7 @@ unzip -x mf6.0.2.zip
 cp /tmp/makefile /tmp/mf6.0.2/make
 cd /tmp/mf6.0.2/make
 make
-cp /tmp/mf6.0.2/make/mf6.0.2 /usr/local/bin
+cp /tmp/mf6.0.2/make/mf6.0.2 /usr/local/bin/mf6.0.2
 
 
 ## compile MODFLOW 2005

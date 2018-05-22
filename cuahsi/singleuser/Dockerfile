@@ -75,8 +75,9 @@ RUN sh /home/install-dakota.sh
 ADD install-dhsvm.sh /home/install-dhsvm.sh
 RUN sh /home/install-dhsvm.sh
 
-#ADD install-modflow.sh /home/install-modflow.sh
-#RUN sh /home/install-modflow.sh
+ADD install-modflow.sh /home/install-modflow.sh
+ADD modflow.6.0.2-makefile-ubuntu /tmp/makefile
+RUN sh /home/install-modflow.sh
 
 ADD install-perm.sh /home/install-perm.sh
 RUN sh /home/install-perm.sh
