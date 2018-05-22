@@ -38,14 +38,30 @@ RUN sh /home/install-gnu.sh
 ADD install-taudem.sh /home/install-taudem.sh
 RUN sh /home/install-taudem.sh
 
-ADD install-condaenvs.sh /home/install-condaenvs.sh
-RUN sh /home/install-condaenvs.sh
+USER jovyan
+  ADD install-condaenvs.sh /home/install-condaenvs.sh
+  RUN sh /home/install-condaenvs.sh
+USER root
+
+RUN ln -sf /opt/conda/envs/python2/bin/python2 /usr/bin/python22 &&\
+ln -sf /opt/conda/envs/python2/bin/pip /usr/bin/pip2 &&\
+ln -s /opt/conda/envs/R/bin/R /usr/bin/R &&\
+ln -s /opt/conda/envs/R/bin/Rscript /usr/bin/Rscript
 
 ADD install-irods.sh /home/install-irods.sh
 RUN sh /home/install-irods.sh
 
-ADD install-rhessys.sh /home/install-rhessys.sh
-RUN sh /home/install-rhessys.sh
+USER jovyan
+
+  ADD install-python.sh /home/install-python.sh
+  RUN sh /home/install-python.sh
+
+  ADD install-r.sh /home/install-r.sh
+  RUN sh /home/install-r.sh
+  
+  ADD install-rhessys.sh /home/install-rhessys.sh
+  RUN sh /home/install-rhessys.sh
+USER root
 
 ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH" \
     CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/usr/include/python3.5m"
@@ -59,13 +75,8 @@ RUN sh /home/install-dakota.sh
 ADD install-dhsvm.sh /home/install-dhsvm.sh
 RUN sh /home/install-dhsvm.sh
 
-USER jovyan
-  ADD install-python.sh /home/install-python.sh
-  RUN sh /home/install-python.sh
-
-  ADD install-r.sh /home/install-r.sh
-  RUN sh /home/install-r.sh
-USER root
+#ADD install-modflow.sh /home/install-modflow.sh
+#RUN sh /home/install-modflow.sh
 
 ADD install-perm.sh /home/install-perm.sh
 RUN sh /home/install-perm.sh

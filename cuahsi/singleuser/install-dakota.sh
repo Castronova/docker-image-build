@@ -44,6 +44,7 @@ ldconfig
 # compile dakota
 mkdir -p /tmp/$dakota/build 
 cd /tmp/$dakota/build 
+cp /home/jovyan/libs/dakota*/build/BuildDakota.cmake .
 cmake -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python -C BuildDakota.cmake /tmp/$dakota 
 make clean 
 make

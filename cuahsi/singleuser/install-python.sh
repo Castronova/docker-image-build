@@ -3,95 +3,130 @@ set -x
 set -e
 
 
-###################################
-#   INSTALL PYTHON 3 LIBRARIES    #
-###################################
-
 conda config --add channels conda-forge 
 conda config --add channels landlab 
 conda config --add channels odm2
 
+###################################
+#   INSTALL PYTHON 3 LIBRARIES    #
+###################################
+
+
 conda install -y -n root \
-  gdal \
-  basemap \
-  jupyterhub=0.8.1 \
-  landlab \
-  ulmo \
-  celery \
-  geopandas \
-  graphviz 
-conda clean --all -y
-
-/opt/conda/bin/pip install --no-cache-dir \
-   hs_restclient \
-   wget \
-   git+https://github.com/cybergis/jupyterlib.git 
+gdal \
+"jupyterhub=0.8.1" \
+"landlab=1.4.0" \
+ogh \
+basemap-data-hires \
+ulmo \
+celery \
+geopandas \
+graphviz \
+python-wget 
+##  basemap \
 
 
-###################################
-#   INSTALL PYTHON 2 LIBRARIES    #
-###################################
+# install hs_restclient dependencies
+conda install -y -n root \
+requests \
+requests-toolbelt \
+requests-oauthlib 
+# install hs_restclient
+/opt/conda/envs/python2/bin/pip install --no-cache-dir hs_restclient 
 
-## PYTHON2 LEGACY
-#conda create -y --name py2legacy python=2.7
-#
-#conda install -y -n py2legacy \
-#    pandas=0.19 \
-#    gdal \
-#    basemap \
-#    ipykernel \
-#    ulmo \
-#    geopandas \
-#    graphviz \
-#    wget \
-#    celery \
-# && conda clean --all -y
-#
-#/opt/conda/envs/py2legacy/bin/python \
-# && pip install --no-cache-dir \
-#    hs_restclient 
-#
-## register the kernel
-#python -m ipykernel install \
-#    --user \
-#    --name "py2legacy" \
-#    --display-name "Python 2.7 - Legacy" 
+# install jupyterlib dependencies
+conda install -y -n root \
+ ipywidgets \
+ ipython \
+ paramiko
+# install jupyterlib
+/opt/conda/envs/python2/bin/pip install --no-cache-dir git+https://github.com/cybergis/jupyterlib.git 
+
+#/opt/conda/bin/pip install --no-cache-dir \
+#   hs_restclient \
+#   wget \
+#   git+https://github.com/cybergis/jupyterlib.git 
+
 
 # PYTHON 2
 conda install -y -n python2 \
-    pandas=0.21.0 \
+    "pandas=0.21.0" \
     gdal \
-    basemap \
     ipykernel \
     ulmo \
     celery \
     geopandas \
-    graphviz \
-    statsmodels=0.8.0 \
-    odm2api=0.6.0.a0 \
-    landlab \
-    bsddb
-conda clean --all -y
+    graphviz  \
+    "statsmodels=0.8.0" \
+    "odm2api=0.6.0.a0" \
+    "landlab=1.4.0" \
+    ogh \
+    basemap-data-hires \
+    bsddb \
+    python-wget
 
-/opt/conda/envs/python2/bin/python \
- && pip install --no-cache-dir \
-    hs_restclient \
-    wget==3.2 \
-    sciunit2 \
-    git+https://github.com/cybergis/jupyterlib.git 
+##basemap \
+
+# install hs_restclient dependencies
+conda install -y -n python2 \
+requests \
+requests-toolbelt \
+requests-oauthlib 
+# install hs_restclient
+/opt/conda/envs/python2/bin/pip install --no-cache-dir hs_restclient 
+
+# install sciunit2 dependencies
+conda install -y -n python2 \
+ backports.tempfile \
+ backports.weakref \
+ configobj \
+ contextlib2 \
+ humanfriendly \
+ monotonic \
+ poster \
+ tqdm \
+ tzlocal
+# install sciunit2
+/opt/conda/envs/python2/bin/pip install --no-cache-dir sciunit2
 sciunit post-install 
 
+# install jupyterlib dependencies
+conda install -y -n python2 \
+ ipywidgets \
+ ipython \
+ paramiko
+# install jupyterlib
+/opt/conda/envs/python2/bin/pip install --no-cache-dir git+https://github.com/cybergis/jupyterlib.git 
+
+#/opt/conda/envs/python2/bin/python \
+# && pip install --no-cache-dir \
+#    hs_restclient \
+##    wget==3.2 \
+##    git+https://github.com/cybergis/jupyterlib.git 
+#    sciunit2 \
+#sciunit post-install 
+#
 # register the kernels
 python -m ipykernel install \
     --user \
     --name "python2" \
     --display-name "Python 2.7" 
 
-###################################
-#      INSTALL NBExtensions       #
-###################################
+####################################
+##      INSTALL NBExtensions       #
+####################################
+# install jupyter_contrib_nbextensions dependencies
+conda install -y -n root \
+ "jupyter_contrib_core>=0.3.3" \
+ jupyter_core \
+ "notebook>=4.0" \
+ pyyaml \
+ tornado \
+ traitlets
 
+# install jupyter_contrib_nbextensions
 /opt/conda/bin/pip install --no-cache-dir git+https://github.com/Castronova/jupyter_contrib_nbextensions.git
+#/opt/conda/bin/pip install --no-cache-dir git+https://github.com/Castronova/jupyter_contrib_nbextensions.git
 jupyter contrib nbextension install --user 
 jupyter nbextension enable recursivedelete/main --user --section=tree 
 jupyter nbextensions_configurator disable --user 

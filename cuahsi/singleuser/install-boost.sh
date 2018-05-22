@@ -25,6 +25,7 @@ cd /home/jovyan/libs/boost
 echo "using mpi ;" >> /home/jovyan/libs/boost/tools/build/v2/user-config.jam
 ./b2 --with=all -j 4 install || echo "Errors in boost installation"
 sh -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/local.conf'
+sh -c 'echo "/usr/local/lib/x86_64-linux-gnu" >> /etc/ld.so.conf.d/local.conf'
 ldconfig
 
 
