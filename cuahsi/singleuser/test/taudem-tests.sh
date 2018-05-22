@@ -1039,6 +1039,7 @@ mpiexec -np 8 moveoutletstostrm  -p  subwatershed_74p.tif  -src  subwatershed_74
 cd gwunittest
 mpiexec -n 4 gagewatershed -p fdr.tif -gw gw.tif -id id.txt -o CatchOutlets3.shp
 }
+
 # editraster doesn't appear to exist
 #@test "mpiexec -n 2 editraster -in fdro.tif -out fdrmod.tif -changes changes.txt" {
 #cd Editraster
