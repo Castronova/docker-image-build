@@ -7,6 +7,11 @@ export PATH=/opt/conda/bin:$PATH
 apt-get update 
 apt-get install --fix-missing -y --no-install-recommends wget git vim
 
+
+# Install dockerspawner, oauth, postgres
+/opt/conda/bin/conda install -yq psycopg2=2.7
+/opt/conda/bin/conda clean -tipsy
+
 cd /tmp
 
 git clone -b upstream-pull https://github.com/hydroshare/dockerspawner.git
