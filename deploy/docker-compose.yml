@@ -88,12 +88,12 @@ services:
        SSL_ENABLED: 0
        SSL_CERT: None
        SSL_KEY: None
-#      volumes:
-#          - type: bind
-#            source: /remote/data/userspace
-#            target: /remote/data/userspace
-#      networks:
-#          - jhub
+  singleuser_culling:
+    image: cuahsi/singleuser-culling:latest
+    environment:
+      JUPYTERHUB_API_TOKEN: 4c747caf01879143cb3c43c138d423e7fbc1decb9b4efe9429bd6b34e8af5dd1
+      CONTAINER_IDLE_TIMEOUT: 3600
+      CONTAINER_MAX_AGE: 86400
 volumes:
   data:
     external:
