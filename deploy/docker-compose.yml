@@ -20,11 +20,6 @@ services:
   hub:
     depends_on:
       - hub-db
-#    build:
-#      context: .
-#      dockerfile: Dockerfile.jupyterhub
-#      args:
-#        JUPYTERHUB_VERSION: ${JUPYTERHUB_VERSION}
     restart: always
     image: cuahsi/jupyterhub
     container_name: jupyterhub
@@ -58,9 +53,15 @@ services:
       JUPYTER_USERSPACE_DIR: ${JUPYTER_USERSPACE_DIR}
       JUPYTER_USER: ${JUPYTER_USER}
       JUPYTER_NOTEBOOK_DIR: ${JUPYTER_NOTEBOOK_DIR}  
+      JUPYTER_USERSPACE_DIR_HOST: ${JUPYTER_USERSPACE_DIR_HOST}
+      JUPYTERHUB_API_TOKEN: ${JUPYTERHUB_API_TOKEN} 
+      CONTAINER_IDLE_TIMEOUT: ${CONTAINER_IDLE_TIMEOUT}
+      CONTAINER_MAX_AGE: ${CONTAINER_MAX_AGE} 
+      DOCKER_MEM_LIMIT: ${DOCKER_MEM_LIMIT}
+      SPAWNER_START_TIMEOUT: ${SPAWNER_START_TIMEOUT}
+      SPAWNER_HTTP_TIMEOUT: ${SPAWNER_HTTP_TIMEOUT}
 #      USERDATA_VOLUME_CONTAINER: ${USERDATA_VOLUME_CONTAINER}
 #      USERDATA_VOLUME_HOST: ${USERDATA_VOLUME_HOST}
-      JUPYTER_USERSPACE_DIR_HOST: ${JUPYTER_USERSPACE_DIR_HOST}
 #      OAUTH_CALLBACK_URL: ${OAUTH_CALLBACK_URL}
     env_file:
       - secrets/postgres.env
@@ -72,28 +73,25 @@ services:
     volumes:
        # Bind userspace on host to Jupyter container (tony)
        - "${JUPYTER_USERSPACE_DIR_HOST}:${JUPYTER_USERSPACE_DIR}:rw"
+       # Mount SSL key and cert
+       - "./secrets/jupyterhub.crt:/srv/jupyterhub/secrets/jupyterhub.crt:ro"
+       - "./secrets/jupyterhub.key:/srv/jupyterhub/secrets/jupyterhub.key:ro"
     ports:
        - "8080:8080"
     environment:
        HYDROSHARE_REDIRECT_COOKIE_PATH: ${JUPYTER_USERSPACE_DIR}/_global/jupyterhub/redirect
        JUPYTER_HUB_IP: jupyter-w2.cuahsi.org
-       JUPYTER_PORT: 80
+       JUPYTER_PORT: 443
+       JUPYTER_REST_PORT: 8080
        JUPYTER_NOTEBOOK_DIR: ${JUPYTER_NOTEBOOK_DIR}
        JUPYTER_USERSPACE_DIR: ${JUPYTER_USERSPACE_DIR_HOST}
-#       - JUPYTER_NOTEBOOK_DIR=/remote/data/userspace/_global/notebooks
-#       - JUPYTER_USERSPACE_DIR=/remote/data/userspace
        JUPYTER_USER: root
        JUPYTER_REST_IP: jupyter-w2.cuahsi.org
-       JUPYTER_REST_PORT: 8080
-       SSL_ENABLED: 0
-       SSL_CERT: None
-       SSL_KEY: None
-  singleuser_culling:
-    image: cuahsi/singleuser-culling:latest
-    environment:
-      JUPYTERHUB_API_TOKEN: 4c747caf01879143cb3c43c138d423e7fbc1decb9b4efe9429bd6b34e8af5dd1
-      CONTAINER_IDLE_TIMEOUT: 3600
-      CONTAINER_MAX_AGE: 86400
+       SSL_ENABLED: 1
+       SSL_CERT: /srv/jupyterhub/secrets/jupyterhub.crt
+       SSL_KEY: /srv/jupyterhub/secrets/jupyterhub.key
+#       - JUPYTER_NOTEBOOK_DIR=/remote/data/userspace/_global/notebooks
+#       - JUPYTER_USERSPACE_DIR=/remote/data/userspace
 volumes:
   data:
     external:
