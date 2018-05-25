@@ -1,7 +1,4 @@
-# Copyright (c) Jupyter Development Team.
-# Distributed under the terms of the Modified BSD License.
-
-# JupyterHub docker-compose configuration file
+# HydroShare-JupyterHub docker-compose configuration file
 version: "2"
 
 services:
@@ -34,8 +31,8 @@ services:
       # Mount jupyter configuration
       - "./config/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
       # Mount SSL key and cert
-      - "./secrets/jupyterhub.crt:/srv/jupyterhub/secrets/jupyterhub.crt:ro"
-      - "./secrets/jupyterhub.key:/srv/jupyterhub/secrets/jupyterhub.key:ro"
+      - "./secrets/jupyterhub.crt:${SSL_CRT}:ro"
+      - "./secrets/jupyterhub.key:${SSL_KEY}:ro"
     ports:
       - "443:443"
     links:
@@ -63,9 +60,8 @@ services:
       DOCKER_MEM_LIMIT: ${DOCKER_MEM_LIMIT}
       SPAWNER_START_TIMEOUT: ${SPAWNER_START_TIMEOUT}
       SPAWNER_HTTP_TIMEOUT: ${SPAWNER_HTTP_TIMEOUT}
-#      USERDATA_VOLUME_CONTAINER: ${USERDATA_VOLUME_CONTAINER}
-#      USERDATA_VOLUME_HOST: ${USERDATA_VOLUME_HOST}
-#      OAUTH_CALLBACK_URL: ${OAUTH_CALLBACK_URL}
+      SSL_CERT: ${SSL_CRT}
+      SSL_KEY: ${SSL_KEY}
     env_file:
       - secrets/postgres.env
       - secrets/oauth.env
@@ -77,8 +73,8 @@ services:
        # Bind userspace on host to Jupyter container (tony)
        - "${JUPYTER_USERSPACE_DIR_HOST}:${JUPYTER_USERSPACE_DIR}:rw"
        # Mount SSL key and cert
-       - "./secrets/jupyterhub.crt:/srv/jupyterhub/secrets/jupyterhub.crt:ro"
-       - "./secrets/jupyterhub.key:/srv/jupyterhub/secrets/jupyterhub.key:ro"
+       - "./secrets/jupyterhub.crt:${SSL_CRT}:ro"
+       - "./secrets/jupyterhub.key:${SSL_KEY}:ro"
     ports:
        - "8080:8080"
     environment:
@@ -91,10 +87,8 @@ services:
        JUPYTER_USER: root
        JUPYTER_REST_IP: jupyter-w2.cuahsi.org
        SSL_ENABLED: 1
-       SSL_CERT: /srv/jupyterhub/secrets/jupyterhub.crt
-       SSL_KEY: /srv/jupyterhub/secrets/jupyterhub.key
-#       - JUPYTER_NOTEBOOK_DIR=/remote/data/userspace/_global/notebooks
-#       - JUPYTER_USERSPACE_DIR=/remote/data/userspace
+       SSL_CERT: ${SSL_CRT}
+       SSL_KEY: ${SSL_KEY}
 volumes:
   data:
     external:
