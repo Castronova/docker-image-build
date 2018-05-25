@@ -79,6 +79,9 @@ ADD install-modflow.sh /home/install-modflow.sh
 ADD modflow.6.0.2-makefile-ubuntu /tmp/makefile
 RUN sh /home/install-modflow.sh
 
+ENV HOME=/home/jovyan/work
+WORKDIR $HOME
+
 ADD install-perm.sh /home/install-perm.sh
 RUN sh /home/install-perm.sh
 
@@ -86,5 +89,6 @@ ADD install-cleanup.sh /home/install-cleanup.sh
 RUN sh /home/install-cleanup.sh
 
 USER jovyan
+
 
 CMD ["sh", "/srv/singleuser/singleuser.sh"]
