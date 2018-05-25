@@ -6,6 +6,16 @@ import os
 
 c = get_config()
 
+cmd = 'python3 /srv/cull_idle_servers.py --timeout=%d --max_age=%d' % \
+      (int(os.environ['CONTAINER_IDLE_TIMEOUT']), int(os.environ['CONTAINER_MAX_AGE']))
+c.JupyterHub.services = [
+{
+    'name': 'cull-idle',
+    'admin': True,
+    'command': cmd.split(),
+#    'command': 'python3 /srv/cull_idle_servers.py --timeout=3600'.split(),
+}]
+
 c.Authenticator.admin_users = {'tonycastronova', 'pdoan'}
 
 # We rely on environment variables to configure JupyterHub so that we
@@ -107,11 +117,14 @@ c.JupyterHub.db_url = 'postgresql://postgres:{password}@{host}/{db}'.format(
 c.DockerSpawner.extra_host_config = {
     'cap_add':['SYS_PTRACE'],
     'security_opt':['apparmor:unconfined'],
-    'mem_limit':'16g'
+    'mem_limit':os.environ['DOCKER_MEM_LIMIT']
+#    'mem_limit':'16g'
 }
 
 # spawner timeout
-c.Spawner.start_timeout = 300
-c.Spawner.http_timeout = 300
+c.Spawner.start_timeout = int(os.environ['SPAWNER_START_TIMEOUT'])
+c.Spawner.http_timeout = int(os.environ['SPAWNER_HTTP_TIMEOUT'])
+#c.Spawner.start_timeout = 300
+#c.Spawner.http_timeout = 300
 
-
+#c.DockerSpawner.notebook_dir = '/home/jovyan/work/notebooks'
