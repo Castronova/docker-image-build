@@ -4,11 +4,11 @@ Deployment Procedure
 ### Create JH userspace
 
 	# create the userspace and notebook directories
-	$ mkdir -p /[path to data on host]/userspace/_global
+	$ mkdir -p /[path to data on host]/userspace/_global/jupyterhub
    
 	# collect the default notebooks
-    $ git clone https://github.com/hydroshare/hydroshare-jupyterhub.git /tmp
-    $ cp -r /tmp/hydroshare-jupyterhub/notebooks /[path to data on host]/userspace/_global
+    $ git clone https://github.com/hydroshare/hydroshare-jupyterhub.git /tmp/hydroshare-jupyterhub
+    $ cp -r /tmp/hydroshare-jupyterhub/notebooks/ /[path to data on host]/userspace/_global/notebooks
     
 
 	# adjust user permissions
