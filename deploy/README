@@ -113,10 +113,26 @@ Deployment Procedure
 	  # set ssl paths inside the Notebook and REST containers
 	  SSL_CRT=/srv/jupyterhub/secrets/jupyterhub.crt
 	  SSL_KEY=/srv/jupyterhub/secrets/jupyterhub.key
-	  
+	 
+	  # set hub and rest ip addresses 
+ 	  JUPYTER_HUB_IP=[e.g. jupyter.cuahsi.org]
+	  JUPYTER_REST_IP=[e.g. jupyter.cuahsi.org]
 
+
+### Prepare JupyterHub volumes and network
+	
+	$ docker volume create --name jupyterhub-data
+	$ docker network create jupyterhub-network
 
 ### Pull docker images and start the JH server
 
-	docker-compose up
+	$ docker pull cuahsi/singleuser:latest	
+
+	$ docker-compose up -d
+
+### View logs
+
+	$ docker logs jupyterhub
+	$ docker logs jupyterhub-db
+	$ docker logs jupyterhub-rest
 

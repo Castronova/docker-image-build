@@ -49,7 +49,7 @@ services:
       # Postgres db info
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: hub-db
-      # Extra JupyterHub (Tony)
+      # Extra JupyterHub
       JUPYTER_USERSPACE_DIR: ${JUPYTER_USERSPACE_DIR}
       JUPYTER_USER: ${JUPYTER_USER}
       JUPYTER_NOTEBOOK_DIR: ${JUPYTER_NOTEBOOK_DIR}  
@@ -67,8 +67,10 @@ services:
       - secrets/oauth.env
     command: >
       jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
+
   jupyterhub_rest:
     image: cuahsi/jupyterhub-rest:latest
+    container_name: jupyterhub-rest
     volumes:
        # Bind userspace on host to Jupyter container (tony)
        - "${JUPYTER_USERSPACE_DIR_HOST}:${JUPYTER_USERSPACE_DIR}:rw"
@@ -79,16 +81,17 @@ services:
        - "8080:8080"
     environment:
        HYDROSHARE_REDIRECT_COOKIE_PATH: ${JUPYTER_USERSPACE_DIR}/_global/jupyterhub/redirect
-       JUPYTER_HUB_IP: jupyter-w2.cuahsi.org
+       JUPYTER_HUB_IP: ${JUPYTER_HUB_IP}
        JUPYTER_PORT: 443
        JUPYTER_REST_PORT: 8080
        JUPYTER_NOTEBOOK_DIR: ${JUPYTER_NOTEBOOK_DIR}
        JUPYTER_USERSPACE_DIR: ${JUPYTER_USERSPACE_DIR_HOST}
        JUPYTER_USER: root
-       JUPYTER_REST_IP: jupyter-w2.cuahsi.org
+       JUPYTER_REST_IP: ${JUPYTER_REST_IP}
        SSL_ENABLED: 1
        SSL_CERT: ${SSL_CRT}
        SSL_KEY: ${SSL_KEY}
+
 volumes:
   data:
     external:
