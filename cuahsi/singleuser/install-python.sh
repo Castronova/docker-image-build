@@ -2,7 +2,15 @@
 set -x
 set -e
 
+# update anaconda
+conda update -n base conda
 
+## define variable shortcuts for conda env installations
+#PIP3=/opt/conda/bin/pip
+#PIP2=/opt/conda/envs/python2/bin/pip
+
+
+# set anaconda channels
 conda config --add channels conda-forge 
 conda config --add channels landlab 
 conda config --add channels odm2
@@ -22,7 +30,9 @@ ulmo \
 celery \
 geopandas \
 graphviz \
-python-wget 
+python-wget \
+ipykernel 
+ 
 ##  basemap \
 
 
@@ -32,7 +42,8 @@ requests \
 requests-toolbelt \
 requests-oauthlib 
 # install hs_restclient
-/opt/conda/envs/python2/bin/pip install --no-cache-dir hs_restclient 
+#/opt/conda/bin/pip install --no-cache-dir hs_restclient 
+/opt/conda/bin/pip install --no-cache-dir hs_restclient 
 
 # install jupyterlib dependencies
 conda install -y -n root \
@@ -40,7 +51,10 @@ conda install -y -n root \
  ipython \
  paramiko
 # install jupyterlib
-/opt/conda/envs/python2/bin/pip install --no-cache-dir git+https://github.com/cybergis/jupyterlib.git 
+/opt/conda/bin/pip install --no-cache-dir git+https://github.com/cybergis/jupyterlib.git 
+
+# install pyemu uncertainty analysis library (pure python so using pip)
+/opt/conda/bin/pip install --no-cache-dir pyemu 
 
 #/opt/conda/bin/pip install --no-cache-dir \
 #   hs_restclient \
@@ -48,7 +62,10 @@ conda install -y -n root \
 #   git+https://github.com/cybergis/jupyterlib.git 
 
 
-# PYTHON 2
+###################################
+#   INSTALL PYTHON 2 LIBRARIES    #
+###################################
+
 conda install -y -n python2 \
     "pandas=0.21.0" \
     gdal \
@@ -98,6 +115,15 @@ conda install -y -n python2 \
 # install jupyterlib
 /opt/conda/envs/python2/bin/pip install --no-cache-dir git+https://github.com/cybergis/jupyterlib.git 
 
+# install pyemu uncertainty analysis library (pure python so using pip)
+/opt/conda/envs/python2/bin/pip install --no-cache-dir pyemu 
+
+# register the python 2.7 kernel
+python -m ipykernel install \
+    --user \
+    --name "python2" \
+    --display-name "Python 2.7" 
+
 #/opt/conda/envs/python2/bin/python \
 # && pip install --no-cache-dir \
 #    hs_restclient \
@@ -106,11 +132,6 @@ conda install -y -n python2 \
 #    sciunit2 \
 #sciunit post-install 
 #
-# register the kernels
-python -m ipykernel install \
-    --user \
-    --name "python2" \
-    --display-name "Python 2.7" 
 
 ####################################
 ##      INSTALL NBExtensions       #
