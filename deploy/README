@@ -124,9 +124,15 @@ Deployment Procedure
 	$ docker volume create --name jupyterhub-data
 	$ docker network create jupyterhub-network
 
-### Pull docker images and start the JH server
+### Pull docker images and run tests
 
 	$ docker pull cuahsi/singleuser:latest	
+
+	$ cd ../cuahsi/singleuser/test
+        $ ./run-taudem-tests.sh
+        $ ./run-modflow-tests.sh
+
+### Start the JH server
 
 	$ docker-compose up -d
 

@@ -88,6 +88,9 @@ RUN sh /home/install-perm.sh
 ADD install-cleanup.sh /home/install-cleanup.sh
 RUN sh /home/install-cleanup.sh
 
+ADD post-build.sh /home/post-build.sh
+RUN sh /home/post-build.sh
+
 USER jovyan
 
 
