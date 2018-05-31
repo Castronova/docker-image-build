@@ -1,5 +1,20 @@
 Deployment Procedure
 
+### Prepare Docker
+	
+	# install
+	$ sudo yum install -y docker-ce
+
+	# adjust docker base image size
+	$ vi /etc/sysconfig/docker-storage
+	$ DOCKER_STORAGE_OPTIONS="--storage-opt dm.basesize=25G"
+
+	# restart docker
+	$ systemctl restart docker
+
+	# install docker-compose
+	$ curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+	$ chmod +x /usr/local/bin/docker-compose
 
 ### Create JH userspace
 
@@ -7,8 +22,8 @@ Deployment Procedure
 	$ mkdir -p /[path to data on host]/userspace/_global/jupyterhub
    
 	# collect the default notebooks
-    $ git clone https://github.com/hydroshare/hydroshare-jupyterhub.git /tmp/hydroshare-jupyterhub
-    $ cp -r /tmp/hydroshare-jupyterhub/notebooks/ /[path to data on host]/userspace/_global/notebooks
+        $ git clone https://github.com/hydroshare/hydroshare-jupyterhub.git /tmp/hydroshare-jupyterhub
+        $ cp -r /tmp/hydroshare-jupyterhub/notebooks/ /[path to data on host]/userspace/_global/notebooks
     
 
 	# adjust user permissions
@@ -21,24 +36,22 @@ Deployment Procedure
 	$ mkdir secrets 
 	
 	# add ssl cert and key
-    $ cp /[path to ssl]/*.crt secrets/jupyterhub.crt
-    $ cp /[path to ssl]/*.key secrets/jupyterhub.key
+	$ cp /[path to ssl]/*.crt secrets/jupyterhub.crt
+        $ cp /[path to ssl]/*.key secrets/jupyterhub.key
 
 	# create oauth environment file
-	$ cat > oauth.env 
+	$ cat > secrets/oauth.env 
 	 HYDROSHARE_CLIENT_ID=[oauth id]
 	 HYDROSHARE_CLIENT_SECRET=[oauth secret]
-	 HYDROSHARE_REDIRECT_COOKIE_PATH=/[path to data on host]//userspace/_global/jupyterhub/redirect
+	 HYDROSHARE_REDIRECT_COOKIE_PATH=/[path to data on host]/userspace/_global/jupyterhub/redirect
 	 OAUTH_CALLBACK_URL=https://[server url]/hub/oauth_callback
 	 <CTRL-D>
 	
 	# create postgres environment file
-    $ cat > postgres.env 
-	  POSTGRES_PASSWORD=[password]
-     <CTRL-D>
+	$ echo POSTGRES_PASSWORD=$(openssl rand -hex 32) > secrets/postgres.env
     
 	# create .env file
-    $ cat > .env 
+        $ cat > .env 
 	  # To override these values, set the shell environment variables.
 	  JUPYTERHUB_VERSION=0.8.0
 
@@ -52,7 +65,7 @@ Deployment Procedure
 	  DOCKER_NOTEBOOK_IMAGE=cuahsi/singleuser
 	  
 	  # the JupyterHub image we want to use
-	  JUPYTER_NOTEBOOK_IMAGE=cuahsi/singleuser
+	  JUPYTER_NOTEBOOK_IMAGE=cuahsi/jupyterhub
 	  
 	  # Notebook directory in the container.
 	  # This will be /home/jovyan/work if the default
@@ -119,9 +132,13 @@ Deployment Procedure
 	  JUPYTER_REST_IP=[e.g. jupyter.cuahsi.org]
 
 
+	# add jupyterhub api token to .env
+	$ echo JUPYTERHUB_API_TOKEN=$(openssl rand -hex 32) >> .env
+
 ### Prepare JupyterHub volumes and network
 	
 	$ docker volume create --name jupyterhub-data
+	$ docker volume create --name jupyterhub-db-data
 	$ docker network create jupyterhub-network
 
 ### Pull docker images and run tests
